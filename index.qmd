@@ -1,0 +1,56 @@
+---
+
+execute: 
+  cache: false
+---
+
+
+```{r}
+#| messages = FALSE
+library(tidycensus)
+library(tidyverse)
+library(sf) 
+income_ma <- get_acs(
+  geography = "tract",
+  variables = "B19013_001",   # Median household income
+  state = "MA",
+  year = 2020,
+  geometry = TRUE,            # get spatial data
+  output = "wide"
+)
+
+# Clean column names
+income_ma <- income_ma |>
+  rename(median_income = B19013_001E) |>
+  filter(!is.na(median_income))
+```
+
+
+
+```{r}
+library(ggplot2)
+library(viridis)
+library(sf)
+
+ggplot(income_ma) +
+  geom_sf(aes(fill = median_income), color = NA) +
+  scale_fill_viridis(
+    option = "mako",
+    direction = -1,
+    name = "Median Income ($)",
+    labels = scales::label_comma()
+  ) +
+  labs(
+    title = "Income Inequality Across Massachusetts",
+    subtitle = "Median Household Income by Census Tract (2020 ACS)",
+    caption = "Source: U.S. Census Bureau, 2020 5-Year American Community Survey"
+  ) +
+  theme_void(base_size = 14) +
+  theme(
+    legend.position = "right",
+    plot.title = element_text(face = "bold", size = 18),
+    plot.subtitle = element_text(size = 14, margin = margin(b = 10)),
+    plot.caption = element_text(size = 10)
+  )
+
+```
