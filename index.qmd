@@ -1,11 +1,10 @@
 ---
 
-execute: 
-  cache: false
+
 ---
 
 
-```{r}
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
 #| messages = FALSE
 library(tidycensus)
 library(tidyverse)
@@ -27,7 +26,7 @@ income_ma <- income_ma |>
 
 
 
-```{r}
+```{r plot-income, echo=FALSE, message=FALSE, warning=FALSE}
 library(ggplot2)
 library(viridis)
 library(sf)
